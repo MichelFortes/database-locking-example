@@ -35,7 +35,7 @@ func main() {
 	}
 	defer pool.Close()
 
-	rows, e := pool.Query(context.Background(), "select id, payload, created_at, updated_at, attempts, status from events where status=$1", "idle")
+	rows, e := pool.Query(context.Background(), "select id, payload, registered_at, attempts, status from events where status=$1", "idle")
 	if e != nil {
 		panic(e)
 	}
@@ -43,18 +43,17 @@ func main() {
 	events, e := pgx.AppendRows[domain.Event](make([]domain.Event, len(rows.RawValues())), rows, func(row pgx.CollectableRow) (domain.Event, error) {
 
 		var id, payload, status string
-		var created, updated time.Time
+		var registeredAt time.Time
 		var attempts int
 
-		err := row.Scan(&id, &payload, &created, &updated, &attempts, &status)
+		err := row.Scan(&id, &payload, &registeredAt, &attempts, &status)
 
 		event := domain.Event{
-			Id:        id,
-			Payload:   payload,
-			Status:    status,
-			CreatedAt: created,
-			UpdatedAt: updated,
-			Attempts:  attempts,
+			Id:           id,
+			Payload:      payload,
+			Status:       status,
+			RegisteredAt: registeredAt,
+			Attempts:     attempts,
 		}
 
 		return event, err

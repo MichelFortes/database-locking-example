@@ -3,15 +3,13 @@ create type event_status as enum ('idle', 'publishing', 'published');
 create table public.events (
 	id uuid not null,
 	payload varchar not null,
-	created_at timestamp default now() not null,
-    updated_at timestamp default now() not null,
+	registered_at timestamp default now() not null,
 	attempts int2 default 1 not null,
 	status public.event_status default 'idle'::event_status not null,
 	constraint events_pk primary key (id)
 );
 
-create index if not exists events_created_at on events (created_at);
-create index if not exists events_updated_at on events (updated_at);
+create index if not exists events_registered_at on events (registered_at);
 create index if not exists events_attempts on events (attempts);
 create index if not exists events_status on events (status);
 
