@@ -5,21 +5,13 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"michelfortes/concurrent-app/domain"
 	"michelfortes/concurrent-app/ini"
 	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
-
-type Event struct {
-	Id        string    `json:"id"`
-	Payload   string    `json:"payload"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Attempts  int       `json:"attempts"`
-	Status    string    `json:"status"`
-}
 
 func main() {
 
@@ -48,7 +40,7 @@ func main() {
 		panic(e)
 	}
 
-	events, e := pgx.AppendRows[Event](make([]Event, len(rows.RawValues())), rows, func(row pgx.CollectableRow) (Event, error) {
+	events, e := pgx.AppendRows[domain.Event](make([]domain.Event, len(rows.RawValues())), rows, func(row pgx.CollectableRow) (domain.Event, error) {
 
 		var id, payload, status string
 		var created, updated time.Time
@@ -56,7 +48,7 @@ func main() {
 
 		err := row.Scan(&id, &payload, &created, &updated, &attempts, &status)
 
-		event := Event{
+		event := domain.Event{
 			Id:        id,
 			Payload:   payload,
 			Status:    status,
