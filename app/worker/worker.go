@@ -4,15 +4,24 @@ import (
 	"context"
 	"fmt"
 	"michelfortes/concurrent-app/domain"
+	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func New(workerId int, pool *pgxpool.Pool) {
+func New(workerId int, pool *pgxpool.Pool, wg *sync.WaitGroup) {
 
-	rows, e := pool.Query(context.Background(), "select id, payload, registered_at, attempts, status from events where status=$1 for update skip locked limit 3", "idle")
+	defer wg.Add(-1)
+
+	tx, e := pool.Begin(context.Background())
+	if e != nil {
+		panic(e)
+	}
+	defer tx.Commit(context.Background())
+
+	rows, e := tx.Query(context.Background(), "select id, payload, registered_at, attempts, status from events where status=$1 for update skip locked limit 3", "idle")
 	if e != nil {
 		panic(e)
 	}
@@ -43,4 +52,6 @@ func New(workerId int, pool *pgxpool.Pool) {
 	for _, e := range events {
 		fmt.Println(e.Payload)
 	}
+
+	time.Sleep(1 * time.Second)
 }

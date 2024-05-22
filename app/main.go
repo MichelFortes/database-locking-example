@@ -4,8 +4,10 @@ import (
 	"michelfortes/concurrent-app/config"
 	"michelfortes/concurrent-app/db"
 	"michelfortes/concurrent-app/worker"
-	"time"
+	"sync"
 )
+
+const workers = 3
 
 func main() {
 
@@ -20,9 +22,13 @@ func main() {
 	}
 	defer pool.Close()
 
-	for i := 1; i <= 3; i++ {
-		go worker.New(i, pool)
+	wg := sync.WaitGroup{}
+
+	wg.Add(workers)
+
+	for i := 1; i <= workers; i++ {
+		go worker.New(i, pool, &wg)
 	}
 
-	time.Sleep(5 * time.Second)
+	wg.Wait()
 }
