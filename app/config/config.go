@@ -1,7 +1,8 @@
-package ini
+package config
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -26,7 +27,14 @@ func (c *Config) validate() {
 	}
 }
 
-func From(file string) (Config, error) {
+func FromArgs() (Config, error) {
+	var confPath string
+	flag.StringVar(&confPath, "c", "", "-c [config file]")
+	flag.Parse()
+	return parse(confPath)
+}
+
+func parse(file string) (Config, error) {
 
 	conf := Config{}
 

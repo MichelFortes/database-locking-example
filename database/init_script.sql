@@ -14,13 +14,13 @@ create index if not exists events_attempts on events (attempts);
 create index if not exists events_status on events (status);
 
 
-insert into events (id, payload) values (gen_random_uuid(), 'json0');
-insert into events (id, payload) values (gen_random_uuid(), 'json1');
-insert into events (id, payload) values (gen_random_uuid(), 'json2');
-insert into events (id, payload) values (gen_random_uuid(), 'json3');
-insert into events (id, payload) values (gen_random_uuid(), 'json4');
-insert into events (id, payload) values (gen_random_uuid(), 'json5');
-insert into events (id, payload) values (gen_random_uuid(), 'json6');
-insert into events (id, payload) values (gen_random_uuid(), 'json7');
-insert into events (id, payload) values (gen_random_uuid(), 'json8');
-insert into events (id, payload) values (gen_random_uuid(), 'json9');
+insert into events (id, payload) values (gen_random_uuid(), 'json 0');
+insert into events (id, payload) values (gen_random_uuid(), 'json 1');
+insert into events (id, payload) values (gen_random_uuid(), 'json 2');
+insert into events (id, payload) values (gen_random_uuid(), 'json 3');
+insert into events (id, payload) values (gen_random_uuid(), 'json 4');
+insert into events (id, payload) values (gen_random_uuid(), 'json 5');
+insert into events (id, payload) values (gen_random_uuid(), 'json 6');
+insert into events (id, payload) values (gen_random_uuid(), 'json 7');
+insert into events (id, payload) values (gen_random_uuid(), 'json 8');
+insert into events (id, payload) values (gen_random_uuid(), 'json 9');
